@@ -1,0 +1,45 @@
+# Compiled files
+*.class
+*.jar
+*.war
+*.ear
+*.log
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+.settings/
+.project
+.classpath
+*.swp
+*.swo
+
+# Build directories
+target/
+bin/
+build/
+dist/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Maven files
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+
+# Local configuration
+config.properties
+application.properties
+.env
+
+# Database connection files
+database.properties
