@@ -62,18 +62,19 @@ Compile all Java files
 Run ATMMachine.java
 
 Project Structure
-ATM-Machine/
-├── src/
-│   └── ATM/
-│       ├── Account.java
-│       ├── ATM.java
-│       ├── ATMMachine.java
-│       ├── Checking_Account.java
-│       ├── DatabaseConnection.java
-│       └── Savings_Account.java
-├── .gitignore
-├── README.md
-└── LICENSE
+
+ATM-Machine/ \n
+├── src/ \n
+│   └── ATM/ \n
+│       ├── Account.java \n
+│       ├── ATM.java \n
+│       ├── ATMMachine.java \n
+│       ├── Checking_Account.java \n
+│       ├── DatabaseConnection.java \n
+│       └── Savings_Account.java \n
+├── .gitignore \n
+├── README.md \n
+└── LICENSE \n
 Usage
 Enter your account number
 
