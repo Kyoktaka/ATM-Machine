@@ -25,20 +25,20 @@ public class Savings_Account extends Account {
         String updateQuery = "UPDATE accounts SET balance = ?, interest_rate = ? WHERE account_number = ?";
 
         try (Connection conn = Databaseconnection.getConnection()) {
-            // Check if account exists
+          
             PreparedStatement checkStmt = conn.prepareStatement(checkQuery);
             checkStmt.setInt(1, getAccountNumber());
             ResultSet rs = checkStmt.executeQuery();
 
             if (rs.next()) {
-                // Update existing account
+           
                 PreparedStatement updateStmt = conn.prepareStatement(updateQuery);
                 updateStmt.setDouble(1, getBalance());
                 updateStmt.setDouble(2, interest_rate);
                 updateStmt.setInt(3, getAccountNumber());
                 updateStmt.executeUpdate();
             } else {
-                // Insert new account
+             
                 PreparedStatement insertStmt = conn.prepareStatement(insertQuery);
                 insertStmt.setInt(1, getAccountNumber());
                 insertStmt.setDouble(2, getBalance());
