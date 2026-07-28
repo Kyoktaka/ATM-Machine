@@ -62,16 +62,15 @@ Compile all Java files
 Run ATMMachine.java
 
 Project Structure
-text
-ATM-System/
+ATM-Machine/
 ├── src/
-│ └── ATM/
-│ ├── Account.java
-│ ├── ATM.java
-│ ├── ATMMachine.java
-│ ├── Checking_Account.java
-│ ├── DatabaseConnection.java
-│ └── Savings_Account.java
+│   └── ATM/
+│       ├── Account.java
+│       ├── ATM.java
+│       ├── ATMMachine.java
+│       ├── Checking_Account.java
+│       ├── DatabaseConnection.java
+│       └── Savings_Account.java
 ├── .gitignore
 ├── README.md
 └── LICENSE
