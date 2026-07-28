@@ -49,3 +49,46 @@ CREATE TABLE transactions (
     FOREIGN KEY (account_number) REFERENCES accounts(account_number)
 );
 ```
+
+How to Run
+Clone the repository
+
+Add MySQL Connector/J to project dependencies
+
+Update database credentials in DatabaseConnection.java
+
+Compile all Java files
+
+Run ATMMachine.java
+
+Project Structure
+text
+ATM-System/
+├── src/
+│ └── ATM/
+│ ├── Account.java
+│ ├── ATM.java
+│ ├── ATMMachine.java
+│ ├── Checking_Account.java
+│ ├── DatabaseConnection.java
+│ └── Savings_Account.java
+├── .gitignore
+├── README.md
+└── LICENSE
+Usage
+Enter your account number
+
+Select from menu options:
+
+Check Balance
+
+Withdraw
+
+Deposit
+
+View Transaction History
+
+Exit
+
+Author
+-Kyoktaka
