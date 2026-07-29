@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class Databaseconnection {
     private static final String URL = "jdbc:mysql://localhost:3306/atm_system";
     private static final String USERNAME = "root";
-    private static final String PASSWORD = ""; // Leave empty if no password set
+    private static final String PASSWORD = "";
 
     private static Connection connection = null;
 
@@ -43,7 +43,6 @@ public class Databaseconnection {
         }
     }
 
-    // New method to check if account exists
     public static boolean accountExists(int accountNumber) {
         String query = "SELECT COUNT(*) FROM accounts WHERE account_number = ?";
         try (Connection conn = getConnection(); PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -58,5 +57,24 @@ public class Databaseconnection {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static void printAllAccounts() {
+        String query = "SELECT * FROM accounts";
+        try (Connection conn = getConnection();
+                java.sql.Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(query)) {
+
+            System.out.println("\n=== All Accounts in Database ===");
+            while (rs.next()) {
+                System.out.printf("Account: %d | Balance: $%.2f | Type: %s | Rate: %.2f%%%n",
+                        rs.getInt("account_number"), rs.getDouble("balance"), rs.getString("account_type"),
+                        rs.getDouble("interest_rate"));
+            }
+            System.out.println("================================\n");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

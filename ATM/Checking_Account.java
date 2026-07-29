@@ -12,7 +12,6 @@ public class Checking_Account extends Account {
         super(accountNumber, balance);
         this.interest_rate = interestRate;
 
-        // Check if account exists
         if (Databaseconnection.accountExists(accountNumber)) {
             System.out.println("Account already exists! Loading existing account.");
             loadInterestRateFromDatabase();

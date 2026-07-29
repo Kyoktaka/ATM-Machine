@@ -14,6 +14,7 @@ public class Account {
     public Account(int accountNumber, double balance) {
         this.accountNumber = accountNumber;
         this.balance = balance;
+        this.isValidAccount = true;
     }
 
     public Account(int accountNumber) {
@@ -29,7 +30,11 @@ public class Account {
         return isValidAccount;
     }
 
-    private void loadFromDatabase() {
+    public void setValidAccount(boolean valid) {
+        this.isValidAccount = valid;
+    }
+
+    protected void loadFromDatabase() {
         String query = "SELECT balance, account_type FROM accounts WHERE account_number = ?";
         try (Connection conn = Databaseconnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -41,6 +46,7 @@ public class Account {
                 this.balance = rs.getDouble("balance");
                 this.accountType = rs.getString("account_type");
                 this.isValidAccount = true;
+                System.out.println("Account loaded successfully!");
             } else {
                 this.isValidAccount = false;
                 System.err.println("Account not found in database!");
@@ -61,6 +67,11 @@ public class Account {
     }
 
     private void updateBalanceInDatabase() {
+        if (!isValidAccount) {
+            System.out.println("Error: Invalid account! Cannot update balance.");
+            return;
+        }
+
         String query = "UPDATE accounts SET balance = ? WHERE account_number = ?";
         try (Connection conn = Databaseconnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -74,14 +85,16 @@ public class Account {
         }
     }
 
-    public void deposit(double amount) {
+    public boolean deposit(double amount) {
         if (!isValidAccount) {
             System.out.println("Error: Invalid account!");
-            return;
+            return false;
         }
         balance += amount;
         updateBalanceInDatabase();
         logTransaction("Deposit", amount);
+        System.out.println("Deposit successful!");
+        return true;
     }
 
     public boolean withdraw(double amount) {

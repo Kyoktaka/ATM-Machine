@@ -49,8 +49,9 @@ public class ATM {
                 if (depositAmount <= 0) {
                     System.out.println("Invalid amount!");
                 } else {
-                    account.deposit(depositAmount);
-                    System.out.printf("Deposit successful! New balance: $%.2f%n", account.getBalance());
+                    if (account.deposit(depositAmount)) {
+                        System.out.printf("New balance: $%.2f%n", account.getBalance());
+                    }
                 }
                 break;
             case 4:

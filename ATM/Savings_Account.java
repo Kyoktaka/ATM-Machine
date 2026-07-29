@@ -7,54 +7,72 @@ import java.sql.SQLException;
 
 public class Savings_Account extends Account {
     private double interest_rate;
-    private boolean isNewAccount = false;
 
     public Savings_Account(int accountNumber, double balance, double interestRate) {
         super(accountNumber, balance);
         this.interest_rate = interestRate;
 
-        // Check if account exists
         if (Databaseconnection.accountExists(accountNumber)) {
             System.out.println("Account already exists! Loading existing account.");
             loadInterestRateFromDatabase();
+            loadFromDatabase();
         } else {
             System.out.println("Creating new Savings Account...");
-            this.isNewAccount = true;
             saveToDatabase();
         }
     }
 
     public Savings_Account(int accountNumber) {
         super(accountNumber);
-        loadInterestRateFromDatabase();
+        if (isValidAccount()) {
+            loadInterestRateFromDatabase();
+        }
+    }
+
+    @Override
+    protected void loadFromDatabase() {
+        String query = "SELECT balance, account_type FROM accounts WHERE account_number = ?";
+        try (Connection conn = Databaseconnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setInt(1, getAccountNumber());
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                setBalance(rs.getDouble("balance"));
+                setValidAccount(true);
+                System.out.println("Account loaded from database!");
+            } else {
+                setValidAccount(false);
+                System.err.println("Account not found in database!");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            setValidAccount(false);
+        }
     }
 
     private void saveToDatabase() {
         String query = "INSERT INTO accounts (account_number, balance, interest_rate, account_type) VALUES (?, ?, ?, 'Savings')";
 
-        try (Connection conn = Databaseconnection.getConnection()) {
-            // Check if account exists
-            PreparedStatement checkStmt = conn.prepareStatement(checkQuery);
-            checkStmt.setInt(1, getAccountNumber());
-            ResultSet rs = checkStmt.executeQuery();
+        try (Connection conn = Databaseconnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
 
-            if (rs.next()) {
-                // Update existing account
-                PreparedStatement updateStmt = conn.prepareStatement(updateQuery);
-                updateStmt.setDouble(1, getBalance());
-                updateStmt.setDouble(2, interest_rate);
-                updateStmt.setInt(3, getAccountNumber());
-                updateStmt.executeUpdate();
-            } else {
-                // Insert new account
-                PreparedStatement insertStmt = conn.prepareStatement(insertQuery);
-                insertStmt.setInt(1, getAccountNumber());
-                insertStmt.setDouble(2, getBalance());
-                insertStmt.setDouble(3, interest_rate);
-                insertStmt.executeUpdate();
-            }
+            pstmt.setInt(1, getAccountNumber());
+            pstmt.setDouble(2, getBalance());
+            pstmt.setDouble(3, interest_rate);
+            pstmt.executeUpdate();
+
+            setValidAccount(true);
+            System.out.println("New Savings Account created successfully!");
+
         } catch (SQLException e) {
-            e.printStackTrace();
+            if (e.getMessage().contains("Duplicate entry")) {
+                System.err.println("Account already exists!");
+            } else {
+                e.printStackTrace();
+            }
+            setValidAccount(false);
         }
     }
 
