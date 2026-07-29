@@ -50,45 +50,50 @@ CREATE TABLE transactions (
 );
 ```
 
-How to Run
-Clone the repository
+## How to Run
 
-Add MySQL Connector/J to project dependencies
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Kyoktaka/ATM-Machine.git
+   ```
+2. Add MySQL Connector/J to your project's classpath (or via your build tool).
+3. Update database credentials in `src/ATM/DatabaseConnection.java`.
+4. Compile the Java files:
+   ```bash
+   javac -d bin src/ATM/*.java
+   ```
+5. Run the application:
+   ```bash
+   java -cp "bin:mysql-connector-java.jar" ATM.ATMMachine
+   ```
 
-Update database credentials in DatabaseConnection.java
+## Project Structure
 
-Compile all Java files
-
-Run ATMMachine.java
-
-Project Structure
-text
-ATM-System/
+```text
+ATM-Machine/
 ├── src/
-│ └── ATM/
-│ ├── Account.java
-│ ├── ATM.java
-│ ├── ATMMachine.java
-│ ├── Checking_Account.java
-│ ├── DatabaseConnection.java
-│ └── Savings_Account.java
+│   └── ATM/
+│       ├── Account.java
+│       ├── ATM.java
+│       ├── ATMMachine.java
+│       ├── Checking_Account.java
+│       ├── DatabaseConnection.java
+│       └── Savings_Account.java
 ├── .gitignore
 ├── README.md
 └── LICENSE
-Usage
-Enter your account number
+```
 
-Select from menu options:
+## Usage
 
-Check Balance
+1. Enter your account number.
+2. Select from the menu options:
+   - Check Balance
+   - Withdraw
+   - Deposit
+   - View Transaction History
+   - Exit
 
-Withdraw
+## Author
 
-Deposit
-
-View Transaction History
-
-Exit
-
-Author
--Kyoktaka
+- Kyoktaka
