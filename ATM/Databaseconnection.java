@@ -2,6 +2,8 @@ package ATM;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Databaseconnection {
@@ -13,7 +15,6 @@ public class Databaseconnection {
 
     public static Connection getConnection() {
         try {
-            // If connection is null or closed, create a new one
             if (connection == null || connection.isClosed()) {
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -40,5 +41,22 @@ public class Databaseconnection {
                 e.printStackTrace();
             }
         }
+    }
+
+    // New method to check if account exists
+    public static boolean accountExists(int accountNumber) {
+        String query = "SELECT COUNT(*) FROM accounts WHERE account_number = ?";
+        try (Connection conn = getConnection(); PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setInt(1, accountNumber);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

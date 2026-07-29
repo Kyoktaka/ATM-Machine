@@ -30,7 +30,6 @@ public class ATM {
             switch (choice) {
             case 1:
                 System.out.printf("Balance: $%.2f%n", account.getBalance());
-                // Now this works because logTransaction is public
                 account.logTransaction("Balance Inquiry", 0);
                 break;
             case 2:

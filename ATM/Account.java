@@ -9,6 +9,7 @@ public class Account {
     private int accountNumber;
     private double balance;
     private String accountType;
+    private boolean isValidAccount = false;
 
     public Account(int accountNumber, double balance) {
         this.accountNumber = accountNumber;
@@ -24,6 +25,10 @@ public class Account {
         return this.accountNumber;
     }
 
+    public boolean isValidAccount() {
+        return isValidAccount;
+    }
+
     private void loadFromDatabase() {
         String query = "SELECT balance, account_type FROM accounts WHERE account_number = ?";
         try (Connection conn = Databaseconnection.getConnection();
@@ -35,11 +40,14 @@ public class Account {
             if (rs.next()) {
                 this.balance = rs.getDouble("balance");
                 this.accountType = rs.getString("account_type");
+                this.isValidAccount = true;
             } else {
+                this.isValidAccount = false;
                 System.err.println("Account not found in database!");
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            this.isValidAccount = false;
         }
     }
 
@@ -67,12 +75,20 @@ public class Account {
     }
 
     public void deposit(double amount) {
+        if (!isValidAccount) {
+            System.out.println("Error: Invalid account!");
+            return;
+        }
         balance += amount;
         updateBalanceInDatabase();
         logTransaction("Deposit", amount);
     }
 
     public boolean withdraw(double amount) {
+        if (!isValidAccount) {
+            System.out.println("Error: Invalid account!");
+            return false;
+        }
         if (amount <= balance) {
             balance -= amount;
             updateBalanceInDatabase();
@@ -83,6 +99,9 @@ public class Account {
     }
 
     public void logTransaction(String type, double amount) {
+        if (!isValidAccount)
+            return;
+
         String query = "INSERT INTO transactions (account_number, transaction_type, amount) VALUES (?, ?, ?)";
         try (Connection conn = Databaseconnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -98,6 +117,11 @@ public class Account {
     }
 
     public void viewTransactionHistory() {
+        if (!isValidAccount) {
+            System.out.println("Error: Invalid account!");
+            return;
+        }
+
         String query = "SELECT * FROM transactions WHERE account_number = ? ORDER BY transaction_date DESC";
         try (Connection conn = Databaseconnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(query)) {

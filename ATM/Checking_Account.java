@@ -11,7 +11,15 @@ public class Checking_Account extends Account {
     public Checking_Account(int accountNumber, double balance, double interestRate) {
         super(accountNumber, balance);
         this.interest_rate = interestRate;
-        saveToDatabase();
+
+        // Check if account exists
+        if (Databaseconnection.accountExists(accountNumber)) {
+            System.out.println("Account already exists! Loading existing account.");
+            loadInterestRateFromDatabase();
+        } else {
+            System.out.println("Creating new Checking Account...");
+            saveToDatabase();
+        }
     }
 
     public Checking_Account(int accountNumber) {
@@ -20,30 +28,24 @@ public class Checking_Account extends Account {
     }
 
     private void saveToDatabase() {
-        String checkQuery = "SELECT * FROM accounts WHERE account_number = ?";
-        String insertQuery = "INSERT INTO accounts (account_number, balance, interest_rate, account_type) VALUES (?, ?, ?, 'Checking')";
-        String updateQuery = "UPDATE accounts SET balance = ?, interest_rate = ? WHERE account_number = ?";
+        String query = "INSERT INTO accounts (account_number, balance, interest_rate, account_type) VALUES (?, ?, ?, 'Checking')";
 
-        try (Connection conn = Databaseconnection.getConnection()) {
-            PreparedStatement checkStmt = conn.prepareStatement(checkQuery);
-            checkStmt.setInt(1, getAccountNumber());
-            ResultSet rs = checkStmt.executeQuery();
+        try (Connection conn = Databaseconnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
 
-            if (rs.next()) {
-                PreparedStatement updateStmt = conn.prepareStatement(updateQuery);
-                updateStmt.setDouble(1, getBalance());
-                updateStmt.setDouble(2, interest_rate);
-                updateStmt.setInt(3, getAccountNumber());
-                updateStmt.executeUpdate();
-            } else {
-                PreparedStatement insertStmt = conn.prepareStatement(insertQuery);
-                insertStmt.setInt(1, getAccountNumber());
-                insertStmt.setDouble(2, getBalance());
-                insertStmt.setDouble(3, interest_rate);
-                insertStmt.executeUpdate();
-            }
+            pstmt.setInt(1, getAccountNumber());
+            pstmt.setDouble(2, getBalance());
+            pstmt.setDouble(3, interest_rate);
+            pstmt.executeUpdate();
+
+            System.out.println("New Checking Account created successfully!");
+
         } catch (SQLException e) {
-            e.printStackTrace();
+            if (e.getMessage().contains("Duplicate entry")) {
+                System.err.println("Account already exists!");
+            } else {
+                e.printStackTrace();
+            }
         }
     }
 
