@@ -7,7 +7,7 @@ public class ATMMachine {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("=== ATM System ===");
-        System.out.println("Note: Account numbers must be exactly 6 digits (100000-999999)");
+        System.out.println("Note: Account numbers must be exactly 6 digits");
 
         int accountNumber = 0;
         boolean validInput = false;
