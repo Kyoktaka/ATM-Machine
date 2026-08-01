@@ -8,7 +8,6 @@ import java.sql.SQLException;
 public class Account {
     private int accountNumber;
     private double balance;
-    private String accountType;
     private boolean isValidAccount = false;
 
     public Account(int accountNumber, double balance) {
@@ -44,7 +43,7 @@ public class Account {
 
             if (rs.next()) {
                 this.balance = rs.getDouble("balance");
-                this.accountType = rs.getString("account_type");
+                rs.getString("account_type");
                 this.isValidAccount = true;
                 System.out.println("Account loaded successfully!");
             } else {
